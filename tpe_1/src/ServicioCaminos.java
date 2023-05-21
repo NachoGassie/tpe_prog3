@@ -33,6 +33,8 @@ public class ServicioCaminos<T> {
         Vertice<T> inicio = grafo.get(origen);
         Vertice<T> fin = grafo.get(destino);
 
+        if (inicio == null || fin == null) return null;
+
         caminos(inicio, fin);
 
         return new ArrayList<>(caminos);
