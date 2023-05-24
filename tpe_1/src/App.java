@@ -89,18 +89,5 @@ public class App {
         //     System.out.println(a);
         // }
 
-        // SERVICIOS
-
-        // Servicio DFS
-        // grafo.dfs();
-
-        // Servicio DFS
-        // grafo.bfs();
-
-        // Servicio Camino
-        grafo.path(4, 3, 4);
-        // grafo.path(4, 3, 3);
-        // grafo.path(4, 3, 2);
-
     }
 }

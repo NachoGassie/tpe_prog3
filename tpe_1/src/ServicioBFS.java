@@ -5,8 +5,8 @@ import java.util.Queue;
 
 public class ServicioBFS<T> {
     private ArrayList<Integer> forest;
-    private Queue<Vertice<T>> fila;
     private HashMap<Integer, Vertice<T>> grafo; 
+    private Queue<Vertice<T>> fila;
 
     public ServicioBFS(HashMap<Integer, Vertice<T>> grafo){
         this.grafo = grafo;

@@ -3,7 +3,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ServicioDFS<T> {
-    private int tiempo;
     private HashMap<Integer, Vertice<T>> grafo;
     private ArrayList<Integer> forest;
 
@@ -23,7 +22,6 @@ public class ServicioDFS<T> {
         }
         
         forest.clear();
-        tiempo = 0;
 
         for (Integer a : grafo.keySet()) {
             Vertice<T> v = grafo.get(a);
@@ -39,8 +37,6 @@ public class ServicioDFS<T> {
         forest.add(v.getverticeId());
         
         v.setColor(Color.YELLOW);
-        tiempo += 1;
-        v.setDiscoverTime(tiempo);
 
         ArrayList<Arco<T>> adyacentes = v.getArcos();
 
@@ -53,7 +49,5 @@ public class ServicioDFS<T> {
         }
 
         v.setColor(Color.BLACK);
-        tiempo += 1;
-        v.setFinalizedTime(tiempo);
     }
 }

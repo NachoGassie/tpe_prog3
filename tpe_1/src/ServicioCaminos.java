@@ -42,10 +42,11 @@ public class ServicioCaminos<T> {
 
     private void caminos(Vertice<T> actual, Vertice<T> fin){
         int actualId = actual.getverticeId();
+        int finId = fin.getverticeId();
         
         caminoActual.add(actualId);
 
-        if (actual.equals(fin)) {
+        if (actualId == finId) {
             if (arcosRecorridos.size()<lim) {
                 caminos.add(new ArrayList<>(caminoActual));
             }

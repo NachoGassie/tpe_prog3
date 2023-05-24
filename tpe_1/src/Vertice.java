@@ -3,8 +3,6 @@ import java.util.ArrayList;
 public class Vertice<T> {
     private int verticeId;
     private Color color;
-    private int discoverTime;
-    private int finalizedTime;
     private ArrayList<Arco<T>> arcos;
 
     public Vertice(int id) {
@@ -23,21 +21,6 @@ public class Vertice<T> {
     }
     public Color getColor(){
         return color;
-    }
-
-    // Time
-    public int getDiscoverTime() {
-        return discoverTime;
-    }
-    public void setDiscoverTime(int discoverTime) {
-        this.discoverTime = discoverTime;
-    }
-
-    public int getFinalizedTime() {
-        return finalizedTime;
-    }
-    public void setFinalizedTime(int finalizedTime) {
-        this.finalizedTime = finalizedTime;
     }
 
     // Arcos
@@ -80,22 +63,9 @@ public class Vertice<T> {
         return false;
     }
 
-
     @Override
     public String toString() {
         return "Vertice [verticeId=" + verticeId + "]";
-    }
-
-    @Override
-    public boolean equals(Object o1){
-        try {
-            Vertice<T> v1 = (Vertice<T>)o1;
-            
-            return v1.verticeId == this.verticeId;
-
-        } catch (Exception e) {
-            return false;
-        }
     }
 
 }

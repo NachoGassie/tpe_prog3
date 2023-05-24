@@ -117,8 +117,7 @@ public class GrafoDirigido<T> implements Grafo<T>{
 	}
 
 	/**
-	* Complejidad: O(n + 1) donde n es la cantidad de vertices y uno es la complejidad
-	* de acceder al size del arraylist de cada vertice.
+	* Complejidad: O(n) donde n es la cantidad de vertices
 	* Debido a que debe recorrer cada vertice para que retorne 
 	* la cantidad de arcos que tiene.
 	*/
@@ -135,14 +134,17 @@ public class GrafoDirigido<T> implements Grafo<T>{
 	}
 
 	/**
-	* Complejidad: O(X) donde X es ... debido a que debe
-	* "realizar lo siguiente" para verificar si existe un arco.
+	* Complejidad: O(1) ya que accede directamente al iterator y lo retorna.
 	*/
 	@Override
 	public Iterator<Integer> obtenerVertices() {
 		return grafo.keySet().iterator();
 	}
 
+	/**
+	* Complejidad: O(n) donde n es la cantidad de arcos del vertice 
+	* ya que que los recorro para agregar a la lista su verice destino   
+	*/
 	@Override
 	public Iterator<Integer> obtenerAdyacentes(int verticeId) {
 		Iterator<Arco<T>> it = this.obtenerArcos(verticeId);
@@ -155,6 +157,11 @@ public class GrafoDirigido<T> implements Grafo<T>{
 		return list.iterator();
 	}
 
+
+	/**
+	* Complejidad: O(n) donde n es la cantidad de keys del grafo
+	* debido a que lo recorro para agregar los arcos del vertice a una lista
+	*/
 	@Override
 	public Iterator<Arco<T>> obtenerArcos() {
 		ArrayList<Arco<T>> result = new ArrayList<>();
@@ -167,54 +174,13 @@ public class GrafoDirigido<T> implements Grafo<T>{
 		return result.iterator();
 	}
 
+	/**
+	* Complejidad: O(1) ya que accede directamente al 
+	* iterator del vertice y lo retorna.
+	*/
 	@Override
 	public Iterator<Arco<T>> obtenerArcos(int verticeId) {
 		Vertice<T> v = grafo.get(verticeId);
 		return v.getArcos().iterator();
-	}
-
-	// SERVICIOS
-
-	// Servicio dfs
-	public void dfs(){
-		ServicioDFS<T> dfs = new ServicioDFS<>(grafo);
-		ArrayList<Integer> orden = dfs.dfsForest();
-
-		printList(orden);
-	}
-
-	// Servicio bfs
-	public void bfs(){
-		ServicioBFS<T> bfs = new ServicioBFS<>(grafo);
-		ArrayList<Integer> orden = bfs.bfsForest();
-
-		printList(orden);
-	}
-
-	private void printList(ArrayList<Integer> orden){
-		for (Integer i : orden) {
-			System.out.println(i);
-		}
-	}
-
-
-	// Servicio Caminos
-	public void path(int verticeOrigen, int verticeDestino, int lim){
-
-		ServicioCaminos<T> camino = new ServicioCaminos<>(grafo, verticeOrigen, verticeDestino, lim);
-
-		ArrayList<ArrayList<Integer>> tmpList = camino.caminos();
-		System.out.println("cant de listas: " + tmpList.size());
-
-		for (ArrayList<Integer> list : tmpList) {
-
-			System.out.println("-");
-			System.out.println("tamanio: " + list.size());
-
-			for (Integer v : list) {
-				System.out.print(v + "-");
-			}
-		}
-	}
-	
+	}	
 }
