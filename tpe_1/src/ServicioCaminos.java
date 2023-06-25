@@ -1,79 +1,66 @@
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
-public class ServicioCaminos<T> {
+public class ServicioCaminos {
     private int origen;
     private int destino;
     private int lim;
-    private HashMap<Integer, Vertice<T>> grafo;
-    private ArrayList<Integer> caminoActual;
+    private GrafoDirigido<Integer> grafo;
     private ArrayList<ArrayList<Integer>> caminos;
-    private ArrayList<Arco<T>> arcosRecorridos;
 
-    public ServicioCaminos(HashMap<Integer, Vertice<T>> grafo, int origen, int destino, int lim) {
+    public ServicioCaminos(GrafoDirigido<Integer> grafo, int origen, int destino, int lim) {
 		this.grafo = grafo;
 		this.origen = origen;
 		this.destino = destino;
 		this.lim = lim;
         
         this.caminos = new ArrayList<>();
-        this.caminoActual = new ArrayList<>();
-        this.arcosRecorridos = new ArrayList<>();
 	}
 
-    public ArrayList<ArrayList<Integer>> caminos(){
+    public List<List<Integer>> caminos(){
+        if (!grafo.contieneVertice(origen) || !grafo.contieneVertice(destino)) 
+            return null;
 
-        for (Integer a : grafo.keySet()) {
-            Vertice<T> v = grafo.get(a);
-
-            if (v.getColor() != Color.WHITE) 
-                v.setColor(Color.WHITE);   
-        }
-
-        Vertice<T> inicio = grafo.get(origen);
-        Vertice<T> fin = grafo.get(destino);
-
-        if (inicio == null || fin == null) return null;
-
-        caminos(inicio, fin);
+        caminos(origen, destino, new ArrayList<Integer>(), new ArrayList<Arco<Integer>>());
 
         return new ArrayList<>(caminos);
     }
 
-    private void caminos(Vertice<T> actual, Vertice<T> fin){
-        int actualId = actual.getverticeId();
-        int finId = fin.getverticeId();
-        
+    private void caminos(
+        int actualId, int finId, 
+        ArrayList<Integer> caminoActual, 
+        ArrayList<Arco<Integer>> arcosRecorridos
+    ){
         caminoActual.add(actualId);
 
         if (actualId == finId) {
-            if (arcosRecorridos.size()<lim) {
+            if (arcosRecorridos.size()<=lim) {
                 caminos.add(new ArrayList<>(caminoActual));
             }
             caminoActual.remove(caminoActual.size() - 1);
             return;
         }
 
-        actual.setColor(Color.YELLOW);
+        Iterator<Arco<Integer>> itAdy = grafo.obtenerArcos(actualId);
 
-        ArrayList<Arco<T>> adyacentes = actual.getArcos();
+        while (itAdy.hasNext()) {
+            Arco<Integer> arco = itAdy.next();
+            int destino = arco.getVerticeDestino();
 
-        for (Arco<T> arco : adyacentes) {
-            Vertice<T> tmpV = grafo.get(arco.getVerticeDestino());
-            Color color = tmpV.getColor();
-            
-            if (!poda(arco, color)){
+            if (!poda(arco, arcosRecorridos)){
                 arcosRecorridos.add(arco);
-                caminos(tmpV, fin);
+                caminos(destino, finId, caminoActual, arcosRecorridos);
                 arcosRecorridos.remove(arcosRecorridos.size() -1);
             }
         }
 
-        actual.setColor(Color.WHITE);
         caminoActual.remove(caminoActual.size() - 1);
     }
 
-    private boolean poda(Arco<T> arco, Color color){
-        return color != Color.WHITE || arcosRecorridos.contains(arco);
+
+    private boolean poda(Arco<Integer> arco, ArrayList<Arco<Integer>> arcosRecorridos){
+        return arcosRecorridos.size() > lim ||
+        arcosRecorridos.contains(arco);
     }
 }

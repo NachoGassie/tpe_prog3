@@ -1,53 +1,56 @@
-
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Iterator;
 
-public class ServicioDFS<T> {
-    private HashMap<Integer, Vertice<T>> grafo;
+public class ServicioDFS {
+    private GrafoDirigido<Integer> grafo; 
     private ArrayList<Integer> forest;
+    private int[] recorridos;
+    private int pos;
 
-
-    public ServicioDFS(HashMap<Integer, Vertice<T>> grafo){
+    public ServicioDFS(GrafoDirigido<Integer> grafo){
         this.grafo = grafo;
         this.forest = new ArrayList<>();
+        this.pos = 0;
     }
 
     public ArrayList<Integer> dfsForest(){
-
-        for (Integer a : grafo.keySet()) {
-            Vertice<T> v = grafo.get(a);
-
-            if (v.getColor() != Color.WHITE) 
-                v.setColor(Color.WHITE);   
-        }
+        int grafoSize = grafo.cantidadVertices();
+        this.recorridos = new int[grafoSize];
         
         forest.clear();
 
-        for (Integer a : grafo.keySet()) {
-            Vertice<T> v = grafo.get(a);
-
-            if (v.getColor() == Color.WHITE) 
+        Iterator<Integer> it = grafo.obtenerVertices();
+        while (it.hasNext()) {
+            int v = it.next(); 
+            if (!isRecorrido(v)) 
                 dfsForest(v);
         }
 
         return new ArrayList<>(forest);
     }
 
-    private void dfsForest(Vertice<T> v){
-        forest.add(v.getverticeId());
+    private void dfsForest(int v){
+        forest.add(v);
+        recorridos[pos] = v;
         
-        v.setColor(Color.YELLOW);
+        Iterator<Arco<Integer>> itAdy = grafo.obtenerArcos(v);
 
-        ArrayList<Arco<T>> adyacentes = v.getArcos();
-
-        for (Arco<T> arco : adyacentes) {
-            Vertice<T> tmpV = grafo.get(arco.getVerticeDestino());
-            Color color = tmpV.getColor();
-            
-            if (color == Color.WHITE)  
-                dfsForest(tmpV);
+        while (itAdy.hasNext()) {
+            Arco<Integer> arco = itAdy.next();
+            int destino = arco.getVerticeDestino();
+            if (!isRecorrido(destino)) {
+                pos += 1;
+                recorridos[pos] = destino;
+                dfsForest(destino);
+            }
         }
+    }
 
-        v.setColor(Color.BLACK);
+    private boolean isRecorrido(int id){
+        for (int i = 0; i < recorridos.length; i++) {
+            if (recorridos[i] == id) 
+                return true;
+        }
+        return false;
     }
 }

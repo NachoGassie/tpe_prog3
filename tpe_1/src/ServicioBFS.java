@@ -1,59 +1,67 @@
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class ServicioBFS<T> {
+public class ServicioBFS {
     private ArrayList<Integer> forest;
-    private HashMap<Integer, Vertice<T>> grafo; 
-    private Queue<Vertice<T>> fila;
+    private GrafoDirigido<Integer> grafo; 
+    private Queue<Integer> fila;
+    private int[] recorridos;
 
-    public ServicioBFS(HashMap<Integer, Vertice<T>> grafo){
+    public ServicioBFS(GrafoDirigido<Integer> grafo){
         this.grafo = grafo;
         this.fila = new LinkedList<>();
         this.forest = new ArrayList<>();
     }
 
     public ArrayList<Integer> bfsForest(){
-
-        for (Integer a : grafo.keySet()) {
-            Vertice<T> v = grafo.get(a);
-            if (v.getColor() != Color.WHITE) 
-                v.setColor(Color.WHITE);   
-        }
+        int grafoSize = grafo.cantidadVertices();
+        this.recorridos = new int[grafoSize];
 
         fila.clear();
         forest.clear();
 
-        for (Integer a : grafo.keySet()) {
-            Vertice<T> v = grafo.get(a);
-            if(v.getColor() == Color.WHITE)
+        Iterator<Integer> it = grafo.obtenerVertices();
+        while (it.hasNext()) {
+            int v = it.next(); 
+            if (!isRecorrido(v)) {
                 bfs(v);
+            }
         }
 
         return new ArrayList<>(forest);
     }
 
-    private void bfs(Vertice<T> vertice){
-        vertice.setColor(Color.BLACK);
+    private void bfs(int vertice){
+        int pos = 0;
+        recorridos[pos] = vertice;
         fila.add(vertice);
 
         while(!fila.isEmpty()){
-            Vertice<T> v = fila.poll();
-            ArrayList<Arco<T>> adyacentes = v.getArcos();
+            int v = fila.poll();
+            Iterator<Arco<Integer>> itAdy = grafo.obtenerArcos(v);
 
-            forest.add(v.getverticeId());
-                
-            for (Arco<T> arco : adyacentes) {
+            forest.add(v);
+
+            while (itAdy.hasNext()) {
+                Arco<Integer> arco = itAdy.next();
                 int destino = arco.getVerticeDestino();
-                Vertice<T> tmp = grafo.get(destino);
-
-                if (tmp.getColor() == Color.WHITE) {
-                    tmp.setColor(Color.BLACK);
-                    fila.add(tmp);
+                if (!isRecorrido(destino)) {
+                    pos += 1;
+                    recorridos[pos] = destino;
+                    fila.add(destino);
                 }
             }
-            
+                
         }
+    }
+
+    private boolean isRecorrido(int id){
+        for (int i = 0; i < recorridos.length; i++) {
+            if (recorridos[i] == id) 
+                return true;
+        }
+        return false;
     }
 }    

@@ -11,12 +11,14 @@ public class GrafoDirigido<T> implements Grafo<T>{
 	}
 
 	/**
-	* Complejidad: O(1) debido a que accede a la ultima posicion
-	* del hashmap, directamente sin recorrerlo y ahi inserta el vertice.
+	* Complejidad: O(1) ya que ese es el costo de insercion de hashmap, insertando al final, 
+	* y su costo de getNode(key), metodo que utiliza para buscar un valor
+	* en base a su clave, en el cual se basa el metodo invocado containsKey(key);
 	*/
 	@Override
 	public void agregarVertice(int verticeId) {
-		grafo.put(verticeId, new Vertice<>(verticeId));
+		if (!grafo.containsKey(verticeId)) 
+			grafo.put(verticeId, new Vertice<>());
 	}
 
 	/**
